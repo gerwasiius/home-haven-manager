@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Upload, X, GripVertical } from 'lucide-react';
+import { ArrowLeft, Upload, X, GripVertical, Plus, Trash2 } from 'lucide-react';
 
 export default function AdminApartmentEditPage() {
   const { id } = useParams();
@@ -26,12 +26,28 @@ export default function AdminApartmentEditPage() {
     bathrooms: existingApartment?.bathrooms || 1,
     maxGuests: existingApartment?.maxGuests || 2,
     pricePerNight: existingApartment?.pricePerNight || 100,
-    amenities: existingApartment?.amenities.join('\n') || '',
-    houseRules: existingApartment?.houseRules.join('\n') || '',
     isActive: existingApartment?.isActive ?? true,
   });
 
+  const [amenities, setAmenities] = useState<string[]>(existingApartment?.amenities || ['']);
+  const [houseRules, setHouseRules] = useState<string[]>(existingApartment?.houseRules || ['']);
   const [images, setImages] = useState<string[]>(existingApartment?.images || []);
+
+  const addAmenity = () => setAmenities([...amenities, '']);
+  const removeAmenity = (index: number) => setAmenities(amenities.filter((_, i) => i !== index));
+  const updateAmenity = (index: number, value: string) => {
+    const updated = [...amenities];
+    updated[index] = value;
+    setAmenities(updated);
+  };
+
+  const addHouseRule = () => setHouseRules([...houseRules, '']);
+  const removeHouseRule = (index: number) => setHouseRules(houseRules.filter((_, i) => i !== index));
+  const updateHouseRule = (index: number, value: string) => {
+    const updated = [...houseRules];
+    updated[index] = value;
+    setHouseRules(updated);
+  };
 
   const handleSave = () => {
     if (!form.name || !form.shortDescription) {
@@ -177,29 +193,77 @@ export default function AdminApartmentEditPage() {
           <div className="bg-card rounded-lg shadow-sm border border-border p-6">
             <h2 className="font-medium text-heading mb-4">Dodatne informacije</h2>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div>
-                <Label htmlFor="amenities">Sadržaji (jedan po liniji)</Label>
-                <Textarea
-                  id="amenities"
-                  value={form.amenities}
-                  onChange={(e) => setForm({ ...form, amenities: e.target.value })}
-                  className="mt-1"
-                  rows={4}
-                  placeholder="Air conditioning&#10;Free WiFi&#10;TV"
-                />
+                <div className="flex items-center justify-between mb-2">
+                  <Label>Sadržaji</Label>
+                  <button
+                    type="button"
+                    onClick={addAmenity}
+                    className="inline-flex items-center text-sm text-primary hover:text-primary/80"
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Dodaj
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {amenities.map((amenity, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />
+                      <Input
+                        value={amenity}
+                        onChange={(e) => updateAmenity(index, e.target.value)}
+                        placeholder="npr. Air conditioning"
+                        className="flex-1"
+                      />
+                      {amenities.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeAmenity(index)}
+                          className="text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div>
-                <Label htmlFor="houseRules">Kućni red (jedan po liniji)</Label>
-                <Textarea
-                  id="houseRules"
-                  value={form.houseRules}
-                  onChange={(e) => setForm({ ...form, houseRules: e.target.value })}
-                  className="mt-1"
-                  rows={3}
-                  placeholder="No smoking&#10;No pets"
-                />
+                <div className="flex items-center justify-between mb-2">
+                  <Label>Kućni red</Label>
+                  <button
+                    type="button"
+                    onClick={addHouseRule}
+                    className="inline-flex items-center text-sm text-primary hover:text-primary/80"
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Dodaj
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {houseRules.map((rule, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />
+                      <Input
+                        value={rule}
+                        onChange={(e) => updateHouseRule(index, e.target.value)}
+                        placeholder="npr. No smoking"
+                        className="flex-1"
+                      />
+                      {houseRules.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeHouseRule(index)}
+                          className="text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
