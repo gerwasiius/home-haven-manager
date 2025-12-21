@@ -22,6 +22,7 @@ import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
 import AdminApartmentsPage from "@/pages/admin/AdminApartmentsPage";
 import AdminApartmentEditPage from "@/pages/admin/AdminApartmentEditPage";
 import AdminReservationsPage from "@/pages/admin/AdminReservationsPage";
+import AdminReservationDetailPage from "@/pages/admin/AdminReservationDetailPage";
 import AdminAuditPage from "@/pages/admin/AdminAuditPage";
 import AdminSettingsPage from "@/pages/admin/AdminSettingsPage";
 
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="apartments" element={<AdminApartmentsPage />} />
             <Route path="apartments/:id" element={<AdminApartmentEditPage />} />
             <Route path="reservations" element={<AdminReservationsPage />} />
+            <Route path="reservations/:id" element={<AdminReservationDetailPage />} />
             <Route path="audit" element={<AdminAuditPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />
           </Route>
